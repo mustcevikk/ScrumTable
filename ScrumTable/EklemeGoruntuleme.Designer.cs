@@ -72,7 +72,7 @@
             this.btn_Ekle.TabIndex = 22;
             this.btn_Ekle.Text = "EKLE";
             this.btn_Ekle.UseVisualStyleBackColor = false;
-            this.btn_Ekle.Click += new System.EventHandler(this.btn_Ekle_Click);
+            this.btn_Ekle.Click += new System.EventHandler(this.ButonaTiklama);
             // 
             // cmb_KimTarafindan
             // 

@@ -20,13 +20,17 @@ namespace ScrumTable
 
         List<Notlar> ana_notListesi = new List<Notlar>();
         StoryNotlari ana_storyNotu = new StoryNotlari();
-        NotStartedNotlari ana_notStartednotu = new NotStartedNotlari();
-        InProgressNotlari ana_inProgressnotu = new InProgressNotlari();
-        DoneNotlari ana_doneNotu = new DoneNotlari();
 
-        OleDbConnection veriBaglantisi = new OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\Users\\MustafaCevik\\Desktop\\Veriler.mdb");
 
-        private void VerilerGoruntule()
+
+        //NotStartedNotlari ana_notStartednotu = new NotStartedNotlari();
+        //InProgressNotlari ana_inProgressnotu = new InProgressNotlari();
+        //DoneNotlari ana_doneNotu = new DoneNotlari();
+
+        OleDbConnection veriBaglantisi = new OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\Users\\MustafaCevik\\source\\repos\\_VeriTabanlari\\Veriler.mdb");
+
+        int storySirasi;
+        private void Veriden_UygunListelereEkleme()
         {
             veriBaglantisi.Open();
             OleDbCommand veriKomutu = new OleDbCommand();
@@ -120,15 +124,191 @@ namespace ScrumTable
                         }
                     }
                 }
+                storySirasi++;
             }
             veriBaglantisi.Close();
         }
 
 
 
-        private void lbl_AddStory_Click(object sender, EventArgs e)
+        private void AddStoryLabelineTiklama(object sender, EventArgs e)
+        {
+            frm_EklemeGoruntuleme storyEklemeformu = new frm_EklemeGoruntuleme();
+            storyEklemeformu.ShowDialog();
+
+            if (storyEklemeformu.butonaTiklandimi)
+            {
+                Label storyLabeli = PaneleStoryEkleme(storyEklemeformu);
+                Label addTasklabeli = LabeleAddTaskLabeliEkleme(storyLabeli);
+
+                Klavyeden_StoryNotuListeyeEkleme(storyEklemeformu, storyLabeli);
+
+                //storyLabeli.MouseClick += LabeleTiklama;
+                addTasklabeli.MouseClick += AddTaskLabelineTiklama;
+            }
+        }
+
+
+
+
+        private void Klavyeden_StoryNotuListeyeEkleme(frm_EklemeGoruntuleme storyFormu, Label hangiLabel)
         {
 
+            StoryNotlari storyNotu = new StoryNotlari
+            {
+                sira = ana_storyNotu.sira + 1,
+                hangiPanelde = pnl_Stories.Name,
+                tamAdi = hangiLabel.BackColor.Name + storyFormu.baslik,
+                baslik = storyFormu.baslik,
+                aciklama = storyFormu.aciklama,
+                renk = storyFormu.etiket,
+                kisi = storyFormu.kimTarafindan,
+                tarih = storyFormu.tarih,
+            };
+
+            ana_notListesi.Add(storyNotu);
+
+            //storyEklemesayaci++;
+        }
+
+
+        /// <summary>
+        /// /////////////////**************************************
+        /// listedeki en büyük sayi ->> metot
+        /// </summary>
+
+        int eklenenTaskSayaciSto;
+        private Label PaneleStoryEkleme(frm_EklemeGoruntuleme storyFormu)
+        {
+            Label storyLabeli = new Label();
+
+            storyLabeli.Location = new Point(0, (eklenenTaskSayaciSto * 205));
+            eklenenTaskSayaciSto++;
+
+            storyLabeli.Size = new Size(180, 180);
+            storyLabeli.FlatStyle = FlatStyle.Flat;
+            storyLabeli.TextAlign = ContentAlignment.MiddleCenter;
+            storyLabeli.Text = storyFormu.baslik;
+            pnl_Stories.Controls.Add(storyLabeli);
+
+            LabelRenginiBelirleme(storyLabeli, storyFormu.etiket);
+
+            return storyLabeli;
+        }
+
+        /// <summary>
+        /// /////////
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="etiket"></param>
+        /// 
+
+
+        private Label LabeleAddTaskLabeliEkleme(Label nereyeEklenecek)
+        {
+            Label addTasklabeli = new Label();
+
+            addTasklabeli.Location = new Point(100, 155);
+            addTasklabeli.Size = new Size(80, 25);
+            addTasklabeli.FlatStyle = FlatStyle.Flat;
+            addTasklabeli.TextAlign = ContentAlignment.BottomRight;
+            addTasklabeli.Text = "+ add task";
+            nereyeEklenecek.Controls.Add(addTasklabeli);
+
+            return addTasklabeli;
+        }
+
+        private void AddTaskLabelineTiklama(object sender, MouseEventArgs e)
+        {
+            Label tiklananLabel = (Label)sender;
+
+            //ana_storyNotu = HangiStoryninNotu(tiklananLabel);
+
+            frm_EklemeGoruntuleme taskEklemeformu = new frm_EklemeGoruntuleme();
+            taskEklemeformu.cmb_Etiket.Enabled = false;
+            taskEklemeformu.ShowDialog();
+
+            if (taskEklemeformu.butonaTiklandimi)
+            {
+                Label taskLabeli = PaneleTaskEkleme(0, taskEklemeformu, pnl_NotStarted);
+                LabelRenginiBelirleme(taskLabeli, tiklananLabel.Parent.BackColor.Name);
+
+                //NotStartedNotuListeyeEkleme(taskEklemeformu, taskLabeli, ana_storyNotu);
+
+                //taskLabeli.MouseClick += LabeleTiklama;
+            }
+        }
+
+        int[] eklenenTaskSayaciNotS = new int[5];
+        int[] eklenenTaskSayaciInP = new int[5];
+        int[] eklenenTaskSayaciDne = new int[5];
+        private Label PaneleTaskEkleme(int yerlestirme, frm_EklemeGoruntuleme taskFormu, Panel nereyeEklenecek)
+        {
+            Label eklenecekTask = new Label();
+
+            if (nereyeEklenecek == pnl_NotStarted)
+            {
+                eklenecekTask.Location = new Point(0, ((205 * yerlestirme)) + (eklenenTaskSayaciNotS[yerlestirme] * 45));
+                eklenenTaskSayaciNotS[yerlestirme]++;
+            }
+            else if (nereyeEklenecek == pnl_InProgress)
+            {
+                eklenecekTask.Location = new Point(0, ((205 * yerlestirme)) + (eklenenTaskSayaciInP[yerlestirme] * 45));
+                eklenenTaskSayaciInP[yerlestirme]++;
+            }
+            else
+            {
+                eklenecekTask.Location = new Point(0, ((205 * yerlestirme)) + (eklenenTaskSayaciDne[yerlestirme] * 45));
+                eklenenTaskSayaciDne[yerlestirme]++;
+            }
+
+            eklenecekTask.Size = new Size(180, 40);
+            eklenecekTask.FlatStyle = FlatStyle.Flat;
+            eklenecekTask.TextAlign = ContentAlignment.MiddleCenter;
+            eklenecekTask.Text = taskFormu.baslik;
+            nereyeEklenecek.Controls.Add(eklenecekTask);
+
+            return eklenecekTask;
+        }
+
+
+
+        public void LabelRenginiBelirleme(Label label, string etiket)
+        {
+            switch (etiket)
+            {
+                case "Yellow":
+                    label.BackColor = Color.Yellow;
+                    break;
+
+                case "Red":
+                    label.BackColor = Color.Red;
+                    break;
+
+                case "LightGreen":
+                    label.BackColor = Color.LightGreen;
+                    break;
+
+                case "LightSkyBlue":
+                    label.BackColor = Color.LightSkyBlue;
+                    break;
+
+                case "White":
+                    label.BackColor = Color.White;
+                    break;
+
+                case "DarkOrchid":
+                    label.BackColor = Color.DarkOrchid;
+                    break;
+
+                case "DarkOrange":
+                    label.BackColor = Color.DarkOrange;
+                    break;
+
+                default:
+                    label.BackColor = Color.HotPink;
+                    break;
+            }
         }
 
         private StoryNotlari Veriden_StoryNotuListeyeEkleme(string[] okunanVeriler)
@@ -145,68 +325,66 @@ namespace ScrumTable
                 tarih = Convert.ToDateTime(okunanVeriler[7])
             };
 
-            ana_notListesi.Add(storyNotu);
+        ana_notListesi.Add(storyNotu);
 
             return storyNotu;
-        }
-
+        }  // veritabanından okunanları uygun listelere ekleme metotları
         private void Veriden_NotStartedNotuListeyeEkleme(string[] okunanVeriler, StoryNotlari storyNotu)
+    {
+        NotStartedNotlari notStartednotu = new NotStartedNotlari
         {
-            NotStartedNotlari notStartednotu = new NotStartedNotlari
-            {
-                sira = Convert.ToInt32(okunanVeriler[0]),
-                hangiPanelde = okunanVeriler[1],
-                tamAdi = okunanVeriler[2],
-                baslik = okunanVeriler[3],
-                aciklama = okunanVeriler[4],
-                renk = okunanVeriler[5],
-                kisi = okunanVeriler[6],
-                tarih = Convert.ToDateTime(okunanVeriler[7])
-            };
+            sira = Convert.ToInt32(okunanVeriler[0]),
+            hangiPanelde = okunanVeriler[1],
+            tamAdi = okunanVeriler[2],
+            baslik = okunanVeriler[3],
+            aciklama = okunanVeriler[4],
+            renk = okunanVeriler[5],
+            kisi = okunanVeriler[6],
+            tarih = Convert.ToDateTime(okunanVeriler[7])
+        };
 
-            storyNotu.NotStTaskEkle(notStartednotu);
+        storyNotu.NotStTaskEkle(notStartednotu);
 
-        }
-
+    }
         private void Veriden_InProgressNotuListeyeEkleme(string[] okunanVeriler, StoryNotlari storyNotu)
+    {
+        InProgressNotlari inProgressNotu = new InProgressNotlari
         {
-            InProgressNotlari inProgressNotu = new InProgressNotlari
-            {
-                sira = Convert.ToInt32(okunanVeriler[0]),
-                hangiPanelde = okunanVeriler[1],
-                tamAdi = okunanVeriler[2],
-                baslik = okunanVeriler[3],
-                aciklama = okunanVeriler[4],
-                renk = okunanVeriler[5],
-                kisi = okunanVeriler[6],
-                tarih = Convert.ToDateTime(okunanVeriler[7])
-            };
+            sira = Convert.ToInt32(okunanVeriler[0]),
+            hangiPanelde = okunanVeriler[1],
+            tamAdi = okunanVeriler[2],
+            baslik = okunanVeriler[3],
+            aciklama = okunanVeriler[4],
+            renk = okunanVeriler[5],
+            kisi = okunanVeriler[6],
+            tarih = Convert.ToDateTime(okunanVeriler[7])
+        };
 
-            storyNotu.InProTaskEkle(inProgressNotu);
-        }
-
+        storyNotu.InProTaskEkle(inProgressNotu);
+    }
         private void Veriden_DoneNotuListeyeEkleme(string[] okunanVeriler, StoryNotlari storyNotu)
+    {
+        DoneNotlari doneNotu = new DoneNotlari
         {
-            DoneNotlari doneNotu = new DoneNotlari
-            {
-                sira = Convert.ToInt32(okunanVeriler[0]),
-                hangiPanelde = okunanVeriler[1],
-                tamAdi = okunanVeriler[2],
-                baslik = okunanVeriler[3],
-                aciklama = okunanVeriler[4],
-                renk = okunanVeriler[5],
-                kisi = okunanVeriler[6],
-                tarih = Convert.ToDateTime(okunanVeriler[7])
-            };
+            sira = Convert.ToInt32(okunanVeriler[0]),
+            hangiPanelde = okunanVeriler[1],
+            tamAdi = okunanVeriler[2],
+            baslik = okunanVeriler[3],
+            aciklama = okunanVeriler[4],
+            renk = okunanVeriler[5],
+            kisi = okunanVeriler[6],
+            tarih = Convert.ToDateTime(okunanVeriler[7])
+        };
 
-            storyNotu.DoneTaskEkle(doneNotu);
-        }
+        storyNotu.DoneTaskEkle(doneNotu);
+    }
 
-        
 
-        private void button1_Click(object sender, EventArgs e)
+
+
+    private void button1_Click(object sender, EventArgs e)
         {
-            VerilerGoruntule();
+            Veriden_UygunListelereEkleme();
             MessageBox.Show("Test");
         }
     }

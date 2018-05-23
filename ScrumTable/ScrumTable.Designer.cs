@@ -67,7 +67,7 @@
             this.lbl_AddStory.Size = new System.Drawing.Size(59, 13);
             this.lbl_AddStory.TabIndex = 10;
             this.lbl_AddStory.Text = "+ add story";
-            this.lbl_AddStory.Click += new System.EventHandler(this.lbl_AddStory_Click);
+            this.lbl_AddStory.Click += new System.EventHandler(this.AddStoryLabelineTiklama);
             // 
             // lbl_BaslikNotS
             // 
