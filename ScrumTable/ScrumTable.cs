@@ -129,7 +129,87 @@ namespace ScrumTable
             veriBaglantisi.Close();
         }
 
+        private void ListedekiNotlariPaneleAktarma()
+        {
+            foreach (StoryNotlari not_Sto in ana_notListesi)
+            {
+                Veriden_PaneleStoryEkleme(not_Sto);
+                MessageBox.Show(not_Sto.baslik);
+                foreach (NotStartedNotlari not_NS in not_Sto.NotStTaskListesi )
+                {
+                    Veriden_PaneleTaskEkleme(not_NS, pnl_NotStarted);
+                    MessageBox.Show(not_NS.baslik);
+                }
 
+                foreach (InProgressNotlari not_IP in not_Sto.InProTaskListesi)
+                {
+                    Veriden_PaneleTaskEkleme(not_IP, pnl_InProgress);
+                    MessageBox.Show(not_IP.baslik);
+                }
+
+                foreach(DoneNotlari not_Dne in not_Sto.DoneTaskListesi)
+                {
+                    Veriden_PaneleTaskEkleme(not_Dne, pnl_Done);
+                    MessageBox.Show(not_Dne.baslik);
+                }
+            }
+        }
+
+        private void Veriden_PaneleTaskEkleme(Notlar not, Panel nereyeEklenecek)
+        {
+            Label eklenecekTask = new Label();
+
+            if (nereyeEklenecek == pnl_NotStarted)
+            {
+                eklenecekTask.Location = new Point(0, ((205 * not.sira)) + (eklenenTaskSayaciNotS[not.sira] * 45));
+                eklenenTaskSayaciNotS[not.sira]++;
+            }
+            else if (nereyeEklenecek == pnl_InProgress)
+            {
+                eklenecekTask.Location = new Point(0, ((205 * not.sira)) + (eklenenTaskSayaciInP[not.sira] * 45));
+                eklenenTaskSayaciInP[not.sira]++;
+            }
+            else
+            {
+                eklenecekTask.Location = new Point(0, ((205 * not.sira)) + (eklenenTaskSayaciDne[not.sira] * 45));
+                eklenenTaskSayaciDne[not.sira]++;
+            }
+
+            eklenecekTask.Size = new Size(180, 40);
+            eklenecekTask.FlatStyle = FlatStyle.Flat;
+            eklenecekTask.TextAlign = ContentAlignment.MiddleCenter;
+            eklenecekTask.Text = not.baslik;
+
+            LabelRenginiBelirleme(eklenecekTask, not.renk);
+
+            nereyeEklenecek.Controls.Add(eklenecekTask);
+        }
+
+        private void Veriden_PaneleStoryEkleme(Notlar not)
+        {
+            Label storyLabeli = new Label();
+
+            storyLabeli.Location = new Point(0, (eklenenTaskSayaciSto * 205));
+            eklenenTaskSayaciSto++;
+
+            storyLabeli.Size = new Size(180, 180);
+            storyLabeli.FlatStyle = FlatStyle.Flat;
+            storyLabeli.TextAlign = ContentAlignment.MiddleCenter;
+            storyLabeli.Text = not.baslik;
+            pnl_Stories.Controls.Add(storyLabeli);
+
+            LabelRenginiBelirleme(storyLabeli, not.renk);
+
+            storyLabeli.MouseClick += LabeleTiklama;
+
+            LabeleAddTaskLabeliEkleme(storyLabeli);
+            //return storyLabeli;
+        }
+
+        private void LabeleTiklama(object sender, MouseEventArgs e)
+        {
+            MessageBox.Show("st");
+        }
 
         private void AddStoryLabelineTiklama(object sender, EventArgs e)
         {
@@ -138,27 +218,30 @@ namespace ScrumTable
 
             if (storyEklemeformu.butonaTiklandimi)
             {
-                Label storyLabeli = PaneleStoryEkleme(storyEklemeformu);
-                Label addTasklabeli = LabeleAddTaskLabeliEkleme(storyLabeli);
+                Klavyeden_StoryNotuListeyeEkleme(storyEklemeformu);
 
-                Klavyeden_StoryNotuListeyeEkleme(storyEklemeformu, storyLabeli);
+                Label storyLabeli = PaneleStoryEkleme(storyEklemeformu);
+                //Label addTasklabeli = LabeleAddTaskLabeliEkleme(storyLabeli);
+
+                
 
                 //storyLabeli.MouseClick += LabeleTiklama;
-                addTasklabeli.MouseClick += AddTaskLabelineTiklama;
+               // addTasklabeli.MouseClick += AddTaskLabelineTiklama;
             }
         }
 
 
 
 
-        private void Klavyeden_StoryNotuListeyeEkleme(frm_EklemeGoruntuleme storyFormu, Label hangiLabel)
+        private void Klavyeden_StoryNotuListeyeEkleme(frm_EklemeGoruntuleme storyFormu)
         {
+            int kacinciSiraya = VeridekiEnBuyukSayiyiBul();
 
             StoryNotlari storyNotu = new StoryNotlari
             {
-                sira = ana_storyNotu.sira + 1,
+                sira = kacinciSiraya + 1,
                 hangiPanelde = pnl_Stories.Name,
-                tamAdi = hangiLabel.BackColor.Name + storyFormu.baslik,
+                tamAdi = storyFormu.etiket + storyFormu.baslik,
                 baslik = storyFormu.baslik,
                 aciklama = storyFormu.aciklama,
                 renk = storyFormu.etiket,
@@ -167,15 +250,9 @@ namespace ScrumTable
             };
 
             ana_notListesi.Add(storyNotu);
-
-            //storyEklemesayaci++;
         }
 
 
-        /// <summary>
-        /// /////////////////**************************************
-        /// listedeki en büyük sayi ->> metot
-        /// </summary>
 
         int eklenenTaskSayaciSto;
         private Label PaneleStoryEkleme(frm_EklemeGoruntuleme storyFormu)
@@ -195,13 +272,6 @@ namespace ScrumTable
 
             return storyLabeli;
         }
-
-        /// <summary>
-        /// /////////
-        /// </summary>
-        /// <param name="label"></param>
-        /// <param name="etiket"></param>
-        /// 
 
 
         private Label LabeleAddTaskLabeliEkleme(Label nereyeEklenecek)
@@ -379,12 +449,35 @@ namespace ScrumTable
         storyNotu.DoneTaskEkle(doneNotu);
     }
 
+        private int VeridekiEnBuyukSayiyiBul()
+        {
+            int sayi = 0;
 
+            veriBaglantisi.Open();
+            OleDbCommand veriKomutu = new OleDbCommand();
+            veriKomutu.Connection = veriBaglantisi;
+            veriKomutu.CommandText = ("Select * from Veriler");
+            OleDbDataReader veriOku = veriKomutu.ExecuteReader();
+            while (veriOku.Read()) // veritabanından veri okuma işlemi
+            {
+                sayi = Convert.ToInt32(veriOku["sira"]);
+
+                while (veriOku.Read())
+                {
+                    if (Convert.ToInt32(veriOku["sira"]) > sayi)
+                        sayi = Convert.ToInt32(veriOku["sira"]);
+                }
+            }
+            veriBaglantisi.Close();
+            return sayi;
+        }
 
 
     private void button1_Click(object sender, EventArgs e)
         {
             Veriden_UygunListelereEkleme();
+            VeridekiEnBuyukSayiyiBul();
+            ListedekiNotlariPaneleAktarma();
             MessageBox.Show("Test");
         }
     }
