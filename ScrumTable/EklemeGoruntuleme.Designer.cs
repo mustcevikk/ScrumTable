@@ -1,6 +1,6 @@
 ﻿namespace ScrumTable
 {
-    partial class EklemeGoruntuleme
+    partial class frm_EklemeGoruntuleme
     {
         /// <summary>
         /// Required designer variable.
@@ -168,7 +168,7 @@
             this.txt_Baslik.Size = new System.Drawing.Size(272, 20);
             this.txt_Baslik.TabIndex = 12;
             // 
-            // EklemeGoruntuleme
+            // frm_EklemeGoruntuleme
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -187,7 +187,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txt_Baslik);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "EklemeGoruntuleme";
+            this.Name = "frm_EklemeGoruntuleme";
             this.Text = "EklemeGoruntuleme";
             this.ResumeLayout(false);
             this.PerformLayout();

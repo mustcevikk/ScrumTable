@@ -45,12 +45,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DoneNotlari.cs" />
+    <Compile Include="InProgressNotlari.cs" />
+    <Compile Include="Notlar.cs" />
     <Compile Include="EklemeGoruntuleme.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="EklemeGoruntuleme.Designer.cs">
       <DependentUpon>EklemeGoruntuleme.cs</DependentUpon>
     </Compile>
+    <Compile Include="NotStartedNotlari.cs" />
     <Compile Include="ScrumTable.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -59,6 +63,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StoryNotlari.cs" />
     <EmbeddedResource Include="EklemeGoruntuleme.resx">
       <DependentUpon>EklemeGoruntuleme.cs</DependentUpon>
     </EmbeddedResource>

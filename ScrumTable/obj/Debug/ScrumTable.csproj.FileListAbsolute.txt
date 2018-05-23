@@ -1,0 +1,11 @@
+C:\Users\MustafaCevik\source\repos\ScrumTable\ScrumTable\bin\Debug\ScrumTable.exe.config
+C:\Users\MustafaCevik\source\repos\ScrumTable\ScrumTable\bin\Debug\ScrumTable.exe
+C:\Users\MustafaCevik\source\repos\ScrumTable\ScrumTable\bin\Debug\ScrumTable.pdb
+C:\Users\MustafaCevik\source\repos\ScrumTable\ScrumTable\obj\Debug\ScrumTable.csprojResolveAssemblyReference.cache
+C:\Users\MustafaCevik\source\repos\ScrumTable\ScrumTable\obj\Debug\ScrumTable.frm_EklemeGoruntuleme.resources
+C:\Users\MustafaCevik\source\repos\ScrumTable\ScrumTable\obj\Debug\ScrumTable.frm_ScrumTable.resources
+C:\Users\MustafaCevik\source\repos\ScrumTable\ScrumTable\obj\Debug\ScrumTable.Properties.Resources.resources
+C:\Users\MustafaCevik\source\repos\ScrumTable\ScrumTable\obj\Debug\ScrumTable.csproj.GenerateResource.Cache
+C:\Users\MustafaCevik\source\repos\ScrumTable\ScrumTable\obj\Debug\ScrumTable.csproj.CoreCompileInputs.cache
+C:\Users\MustafaCevik\source\repos\ScrumTable\ScrumTable\obj\Debug\ScrumTable.exe
+C:\Users\MustafaCevik\source\repos\ScrumTable\ScrumTable\obj\Debug\ScrumTable.pdb

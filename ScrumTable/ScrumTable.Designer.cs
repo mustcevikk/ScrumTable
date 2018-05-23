@@ -37,6 +37,8 @@
             this.pnl_NotStarted = new System.Windows.Forms.Panel();
             this.pnl_InProgress = new System.Windows.Forms.Panel();
             this.pnl_Stories = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.pnl_Stories.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbl_BaslikDne
@@ -108,10 +110,21 @@
             // 
             // pnl_Stories
             // 
+            this.pnl_Stories.Controls.Add(this.button1);
             this.pnl_Stories.Location = new System.Drawing.Point(21, 31);
             this.pnl_Stories.Name = "pnl_Stories";
             this.pnl_Stories.Size = new System.Drawing.Size(180, 615);
             this.pnl_Stories.TabIndex = 9;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(69, 139);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // frm_ScrumTable
             // 
@@ -130,6 +143,7 @@
             this.Controls.Add(this.pnl_Stories);
             this.Name = "frm_ScrumTable";
             this.Text = "Scrum Table";
+            this.pnl_Stories.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -146,6 +160,7 @@
         private System.Windows.Forms.Panel pnl_NotStarted;
         private System.Windows.Forms.Panel pnl_InProgress;
         private System.Windows.Forms.Panel pnl_Stories;
+        private System.Windows.Forms.Button button1;
     }
 }
 
