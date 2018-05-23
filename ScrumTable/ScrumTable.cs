@@ -19,7 +19,7 @@ namespace ScrumTable
         }
 
         List<Notlar> ana_notListesi = new List<Notlar>();
-        StoryNotlari ana_storyNotu = new StoryNotlari();
+        StoryNotlari bu_storyNotu = new StoryNotlari();
 
 
 
@@ -133,29 +133,25 @@ namespace ScrumTable
         {
             foreach (StoryNotlari not_Sto in ana_notListesi)
             {
-                Veriden_PaneleStoryEkleme(not_Sto);
-                MessageBox.Show(not_Sto.baslik);
+                Listeden_PaneleStoryEkleme(not_Sto);
                 foreach (NotStartedNotlari not_NS in not_Sto.NotStTaskListesi )
                 {
-                    Veriden_PaneleTaskEkleme(not_NS, pnl_NotStarted);
-                    MessageBox.Show(not_NS.baslik);
+                    Listeden_PaneleTaskEkleme(not_NS, pnl_NotStarted);
                 }
 
                 foreach (InProgressNotlari not_IP in not_Sto.InProTaskListesi)
                 {
-                    Veriden_PaneleTaskEkleme(not_IP, pnl_InProgress);
-                    MessageBox.Show(not_IP.baslik);
+                    Listeden_PaneleTaskEkleme(not_IP, pnl_InProgress);
                 }
 
                 foreach(DoneNotlari not_Dne in not_Sto.DoneTaskListesi)
                 {
-                    Veriden_PaneleTaskEkleme(not_Dne, pnl_Done);
-                    MessageBox.Show(not_Dne.baslik);
+                    Listeden_PaneleTaskEkleme(not_Dne, pnl_Done);
                 }
             }
         }
 
-        private void Veriden_PaneleTaskEkleme(Notlar not, Panel nereyeEklenecek)
+        private void Listeden_PaneleTaskEkleme(Notlar not, Panel nereyeEklenecek)
         {
             Label eklenecekTask = new Label();
 
@@ -183,9 +179,10 @@ namespace ScrumTable
             LabelRenginiBelirleme(eklenecekTask, not.renk);
 
             nereyeEklenecek.Controls.Add(eklenecekTask);
-        }
 
-        private void Veriden_PaneleStoryEkleme(Notlar not)
+            eklenecekTask.MouseClick += LabeleTiklama;
+        }
+        private void Listeden_PaneleStoryEkleme(Notlar not)
         {
             Label storyLabeli = new Label();
 
@@ -202,8 +199,9 @@ namespace ScrumTable
 
             storyLabeli.MouseClick += LabeleTiklama;
 
-            LabeleAddTaskLabeliEkleme(storyLabeli);
-            //return storyLabeli;
+            Label addTaskLabeli = LabeleAddTaskLabeliEkleme(storyLabeli);
+
+            addTaskLabeli.MouseClick += AddTaskLabelineTiklama;
         }
 
         private void LabeleTiklama(object sender, MouseEventArgs e)
@@ -214,22 +212,40 @@ namespace ScrumTable
         private void AddStoryLabelineTiklama(object sender, EventArgs e)
         {
             frm_EklemeGoruntuleme storyEklemeformu = new frm_EklemeGoruntuleme();
+            storyEklemeformu.cmb_Konumlandir.Hide();
             storyEklemeformu.ShowDialog();
 
             if (storyEklemeformu.butonaTiklandimi)
             {
                 Klavyeden_StoryNotuListeyeEkleme(storyEklemeformu);
 
-                Label storyLabeli = PaneleStoryEkleme(storyEklemeformu);
-                //Label addTasklabeli = LabeleAddTaskLabeliEkleme(storyLabeli);
-
-                
-
-                //storyLabeli.MouseClick += LabeleTiklama;
-               // addTasklabeli.MouseClick += AddTaskLabelineTiklama;
+                SiralamaIcinGerekliIslemler();
+           
+                ListedekiNotlariPaneleAktarma();
             }
         }
 
+        private void AddTaskLabelineTiklama(object sender, MouseEventArgs e)
+        {
+            Label tiklananLabel = (Label)sender;
+
+            bu_storyNotu = HangiStoryninNotu(tiklananLabel);
+
+            frm_EklemeGoruntuleme taskEklemeformu = new frm_EklemeGoruntuleme();
+            taskEklemeformu.cmb_Etiket.Enabled = false;
+            taskEklemeformu.cmb_Konumlandir.Hide();
+            taskEklemeformu.ShowDialog();
+
+            if (taskEklemeformu.butonaTiklandimi)
+            {
+                Klavyeden_NotStartedNotuListeyeEkleme(taskEklemeformu, bu_storyNotu);
+
+                SiralamaIcinGerekliIslemler();
+
+                ListedekiNotlariPaneleAktarma();
+                   
+            }
+        }
 
 
 
@@ -252,7 +268,36 @@ namespace ScrumTable
             ana_notListesi.Add(storyNotu);
         }
 
+        private void Klavyeden_NotStartedNotuListeyeEkleme(frm_EklemeGoruntuleme taskFormu, StoryNotlari snot)
+        {
+            foreach (StoryNotlari not_Sto in ana_notListesi)
+            {
+                if (not_Sto == snot)
+                {
 
+                    NotStartedNotlari notStartednotu = new NotStartedNotlari
+                    {
+                        sira = snot.sira,
+                        hangiPanelde = pnl_NotStarted.Name,
+                        tamAdi = snot.renk + taskFormu.baslik,
+                        baslik = taskFormu.baslik,
+                        aciklama = taskFormu.aciklama,
+                        renk = snot.renk,
+                        kisi = taskFormu.kimTarafindan,
+                        tarih = taskFormu.tarih,
+                    };
+
+                    snot.NotStTaskListesi.Add(notStartednotu);
+
+                    veriBaglantisi.Open();
+                    OleDbCommand veriKomutu = new OleDbCommand("insert into Veriler (sira,hangiPanelde,tamAdi,baslik,aciklama,renk,kisi,tarih) values ('" + notStartednotu.sira + "','" + notStartednotu.hangiPanelde + "','" + notStartednotu.tamAdi + "','" + notStartednotu.baslik + "','" + notStartednotu.aciklama + "','" + notStartednotu.renk + "' , '" + notStartednotu.kisi + "' , '" + notStartednotu.tarih.ToShortDateString() + "')", veriBaglantisi);
+                    veriKomutu.ExecuteNonQuery();
+                    veriBaglantisi.Close();
+
+                    break;
+                }
+            }
+        }
 
         int eklenenTaskSayaciSto;
         private Label PaneleStoryEkleme(frm_EklemeGoruntuleme storyFormu)
@@ -288,26 +333,7 @@ namespace ScrumTable
             return addTasklabeli;
         }
 
-        private void AddTaskLabelineTiklama(object sender, MouseEventArgs e)
-        {
-            Label tiklananLabel = (Label)sender;
-
-            //ana_storyNotu = HangiStoryninNotu(tiklananLabel);
-
-            frm_EklemeGoruntuleme taskEklemeformu = new frm_EklemeGoruntuleme();
-            taskEklemeformu.cmb_Etiket.Enabled = false;
-            taskEklemeformu.ShowDialog();
-
-            if (taskEklemeformu.butonaTiklandimi)
-            {
-                Label taskLabeli = PaneleTaskEkleme(0, taskEklemeformu, pnl_NotStarted);
-                LabelRenginiBelirleme(taskLabeli, tiklananLabel.Parent.BackColor.Name);
-
-                //NotStartedNotuListeyeEkleme(taskEklemeformu, taskLabeli, ana_storyNotu);
-
-                //taskLabeli.MouseClick += LabeleTiklama;
-            }
-        }
+        
 
         int[] eklenenTaskSayaciNotS = new int[5];
         int[] eklenenTaskSayaciInP = new int[5];
@@ -472,8 +498,36 @@ namespace ScrumTable
             return sayi;
         }
 
+        private void SiralamaIcinGerekliIslemler()
+        {
+            pnl_Stories.Controls.Clear();
+            pnl_NotStarted.Controls.Clear();
+            pnl_InProgress.Controls.Clear();
+            pnl_Done.Controls.Clear();
+            eklenenTaskSayaciSto = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                eklenenTaskSayaciNotS[i] = 0;
+                eklenenTaskSayaciInP[i] = 0;
+                eklenenTaskSayaciDne[i] = 0;
+            }
+        }
 
-    private void button1_Click(object sender, EventArgs e)
+        private StoryNotlari HangiStoryninNotu(Label tiklananLabel)
+        {
+            string tiklananLabelrengi = tiklananLabel.BackColor.Name;
+            foreach (StoryNotlari snot in ana_notListesi)
+            {
+                if (snot.renk == tiklananLabelrengi)
+                {
+                    bu_storyNotu = snot;
+                }
+            }
+
+            return bu_storyNotu;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
         {
             Veriden_UygunListelereEkleme();
             VeridekiEnBuyukSayiyiBul();

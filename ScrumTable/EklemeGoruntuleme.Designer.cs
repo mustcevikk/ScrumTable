@@ -195,8 +195,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox cmb_Konumlandir;
         private System.Windows.Forms.DateTimePicker datetp_Tarih;
         private System.Windows.Forms.Button btn_Ekle;
         private System.Windows.Forms.ComboBox cmb_KimTarafindan;
@@ -208,5 +206,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txt_Baslik;
+        public System.Windows.Forms.ComboBox cmb_Konumlandir;
     }
 }
