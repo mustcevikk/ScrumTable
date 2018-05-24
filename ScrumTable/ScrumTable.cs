@@ -302,9 +302,6 @@ namespace ScrumTable
             veriBaglantisi.Close();
 
             SiralamaIcinGerekliIslemler();
-            ana_notListesi = new List<Notlar>();
-            Veriden_UygunListelereEkleme();
-            ListedekiNotlariPaneleAktarma();
         }  // ilgili veriyi veritabanından silme
 
         private int VeridekiEnBuyukSayiyiBul()
@@ -479,8 +476,6 @@ namespace ScrumTable
                 Klavyeden_StoryNotuListeyeEkleme(storyEklemeformu);
 
                 SiralamaIcinGerekliIslemler();
-           
-                ListedekiNotlariPaneleAktarma();
             }
         }  // story eklemeye tıklanıldığında gerçekleşecek işlemler
 
@@ -499,10 +494,7 @@ namespace ScrumTable
             {
                 Klavyeden_NotStartedNotuListeyeEkleme(taskEklemeformu, ana_storyNotu);
 
-                SiralamaIcinGerekliIslemler();
-
-                ListedekiNotlariPaneleAktarma();
-                   
+                SiralamaIcinGerekliIslemler();  
             }
         }  // task eklemeye tıklanıldığında gerçekleşecek işlemler
 
