@@ -16,6 +16,7 @@ namespace ScrumTable
         {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
+            btn_Sil.Hide();
         }
 
         public string baslik;
@@ -25,8 +26,8 @@ namespace ScrumTable
         public DateTime tarih;
         public string hangiPanele;
 
-        public bool butonaTiklandimi;
-        private void ButonaTiklama(object sender, EventArgs e)
+        public bool eklensinMi;
+        private void EkleButonunaTiklama(object sender, EventArgs e)
         {
             baslik = txt_Baslik.Text;
             aciklama = txt_Aciklama.Text;
@@ -34,10 +35,46 @@ namespace ScrumTable
             kimTarafindan = cmb_KimTarafindan.Text;
             tarih = datetp_Tarih.Value;
             hangiPanele = cmb_Konumlandir.Text;
-            butonaTiklandimi = true;
+            eklensinMi = true;
             Close();
         }
 
+        public bool silinsinMi;
+        private void SilButonunaTiklama(object sender, EventArgs e)
+        {
+            silinsinMi = true;
+            Close();
+        }
+
+        public void StoryGoruntuleme(string story, string baslik, string aciklama, string kisi, string tarih, string konum)
+        {
+            Text = "Story Görüntüleme Ekranı";
+            txt_Baslik.Enabled = false;
+            btn_Ekle.Text = "KAYDET";
+            txt_Baslik.Text = baslik;
+            txt_Aciklama.Text = aciklama;
+            cmb_Etiket.Enabled = false;
+            datetp_Tarih.Text = tarih;
+            cmb_KimTarafindan.Text = kisi;
+            cmb_Konumlandir.Text = konum;
+            ShowDialog();
+        }
+
+        public void TaskGoruntuleme(string baslik, string aciklama, string kisi, string tarih, string konum)
+        {
+            Text = "Task Görüntüleme Ekranı";
+            Size = new Size(575, 260);
+            btn_Sil.Show();
+            txt_Baslik.Enabled = false;
+            btn_Ekle.Text = "KAYDET";
+            txt_Baslik.Text = baslik;
+            txt_Aciklama.Text = aciklama;
+            cmb_Etiket.Enabled = false;
+            datetp_Tarih.Text = tarih;
+            cmb_KimTarafindan.Text = kisi;
+            cmb_Konumlandir.Text = konum;
+            ShowDialog();
+        }
         private string RenkAtamasi(string etiketTexti)
         {
             switch (etiketTexti)
@@ -71,17 +108,5 @@ namespace ScrumTable
             }
         }
 
-        public void FormGoruntuleme(string baslik, string aciklama, string kisi, string tarih, string konum)
-        {
-            txt_Baslik.Enabled = false;
-            btn_Ekle.Text = "Kaydet";
-            txt_Baslik.Text = baslik;
-            txt_Aciklama.Text = aciklama;
-            cmb_Etiket.Enabled = false;
-            datetp_Tarih.Text = tarih;
-            cmb_KimTarafindan.Text = kisi;
-            cmb_Konumlandir.Text = konum;
-            ShowDialog();
-        }
     }
 }

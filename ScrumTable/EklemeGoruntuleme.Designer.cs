@@ -40,6 +40,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_Baslik = new System.Windows.Forms.TextBox();
+            this.btn_Sil = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cmb_Konumlandir
@@ -49,14 +50,14 @@
             "Not Started",
             "In Progress",
             "Done"});
-            this.cmb_Konumlandir.Location = new System.Drawing.Point(398, 170);
+            this.cmb_Konumlandir.Location = new System.Drawing.Point(398, 159);
             this.cmb_Konumlandir.Name = "cmb_Konumlandir";
             this.cmb_Konumlandir.Size = new System.Drawing.Size(121, 21);
             this.cmb_Konumlandir.TabIndex = 23;
             // 
             // datetp_Tarih
             // 
-            this.datetp_Tarih.Location = new System.Drawing.Point(319, 137);
+            this.datetp_Tarih.Location = new System.Drawing.Point(319, 126);
             this.datetp_Tarih.Name = "datetp_Tarih";
             this.datetp_Tarih.Size = new System.Drawing.Size(200, 20);
             this.datetp_Tarih.TabIndex = 21;
@@ -66,13 +67,13 @@
             this.btn_Ekle.BackColor = System.Drawing.SystemColors.Control;
             this.btn_Ekle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_Ekle.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btn_Ekle.Location = new System.Drawing.Point(239, 168);
+            this.btn_Ekle.Location = new System.Drawing.Point(239, 157);
             this.btn_Ekle.Name = "btn_Ekle";
             this.btn_Ekle.Size = new System.Drawing.Size(75, 23);
             this.btn_Ekle.TabIndex = 22;
             this.btn_Ekle.Text = "EKLE";
             this.btn_Ekle.UseVisualStyleBackColor = false;
-            this.btn_Ekle.Click += new System.EventHandler(this.ButonaTiklama);
+            this.btn_Ekle.Click += new System.EventHandler(this.EkleButonunaTiklama);
             // 
             // cmb_KimTarafindan
             // 
@@ -81,7 +82,7 @@
             "Emin BORANDAĞ",
             "Mustafa ÇEVİK",
             "Yalçın KABAR"});
-            this.cmb_KimTarafindan.Location = new System.Drawing.Point(319, 88);
+            this.cmb_KimTarafindan.Location = new System.Drawing.Point(319, 77);
             this.cmb_KimTarafindan.Name = "cmb_KimTarafindan";
             this.cmb_KimTarafindan.Size = new System.Drawing.Size(200, 21);
             this.cmb_KimTarafindan.TabIndex = 20;
@@ -98,7 +99,7 @@
             "Mor",
             "Turuncu",
             "Pembe"});
-            this.cmb_Etiket.Location = new System.Drawing.Point(319, 40);
+            this.cmb_Etiket.Location = new System.Drawing.Point(319, 29);
             this.cmb_Etiket.Name = "cmb_Etiket";
             this.cmb_Etiket.Size = new System.Drawing.Size(200, 21);
             this.cmb_Etiket.TabIndex = 19;
@@ -107,7 +108,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label2.Location = new System.Drawing.Point(25, 73);
+            this.label2.Location = new System.Drawing.Point(25, 62);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(50, 13);
             this.label2.TabIndex = 13;
@@ -115,7 +116,7 @@
             // 
             // txt_Aciklama
             // 
-            this.txt_Aciklama.Location = new System.Drawing.Point(25, 89);
+            this.txt_Aciklama.Location = new System.Drawing.Point(25, 78);
             this.txt_Aciklama.Multiline = true;
             this.txt_Aciklama.Name = "txt_Aciklama";
             this.txt_Aciklama.Size = new System.Drawing.Size(272, 69);
@@ -125,7 +126,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label5.Location = new System.Drawing.Point(316, 121);
+            this.label5.Location = new System.Drawing.Point(316, 110);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(31, 13);
             this.label5.TabIndex = 15;
@@ -135,7 +136,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label4.Location = new System.Drawing.Point(316, 72);
+            this.label4.Location = new System.Drawing.Point(316, 61);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(78, 13);
             this.label4.TabIndex = 16;
@@ -145,7 +146,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label3.Location = new System.Drawing.Point(316, 25);
+            this.label3.Location = new System.Drawing.Point(316, 14);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(34, 13);
             this.label3.TabIndex = 17;
@@ -155,7 +156,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label1.Location = new System.Drawing.Point(25, 25);
+            this.label1.Location = new System.Drawing.Point(25, 14);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 18;
@@ -163,19 +164,33 @@
             // 
             // txt_Baslik
             // 
-            this.txt_Baslik.Location = new System.Drawing.Point(25, 41);
+            this.txt_Baslik.Location = new System.Drawing.Point(25, 30);
             this.txt_Baslik.Name = "txt_Baslik";
             this.txt_Baslik.Size = new System.Drawing.Size(272, 20);
             this.txt_Baslik.TabIndex = 12;
+            // 
+            // btn_Sil
+            // 
+            this.btn_Sil.BackColor = System.Drawing.SystemColors.Control;
+            this.btn_Sil.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_Sil.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btn_Sil.Location = new System.Drawing.Point(239, 186);
+            this.btn_Sil.Name = "btn_Sil";
+            this.btn_Sil.Size = new System.Drawing.Size(75, 23);
+            this.btn_Sil.TabIndex = 22;
+            this.btn_Sil.Text = "SİL";
+            this.btn_Sil.UseVisualStyleBackColor = false;
+            this.btn_Sil.Click += new System.EventHandler(this.SilButonunaTiklama);
             // 
             // frm_EklemeGoruntuleme
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.CadetBlue;
-            this.ClientSize = new System.Drawing.Size(560, 218);
+            this.ClientSize = new System.Drawing.Size(560, 196);
             this.Controls.Add(this.cmb_Konumlandir);
             this.Controls.Add(this.datetp_Tarih);
+            this.Controls.Add(this.btn_Sil);
             this.Controls.Add(this.btn_Ekle);
             this.Controls.Add(this.cmb_KimTarafindan);
             this.Controls.Add(this.cmb_Etiket);
@@ -188,7 +203,7 @@
             this.Controls.Add(this.txt_Baslik);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "frm_EklemeGoruntuleme";
-            this.Text = "EklemeGoruntuleme";
+            this.Text = "Ekleme Ekranı";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -207,5 +222,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txt_Baslik;
         public System.Windows.Forms.ComboBox cmb_Konumlandir;
+        public System.Windows.Forms.Button btn_Sil;
     }
 }

@@ -16,6 +16,7 @@ namespace ScrumTable
         public frm_ScrumTable()
         {
             InitializeComponent();
+            StartPosition = FormStartPosition.CenterScreen;
             Veriden_UygunListelereEkleme();
             ListedekiNotlariPaneleAktarma();
         }
@@ -23,105 +24,99 @@ namespace ScrumTable
         List<Notlar> ana_notListesi = new List<Notlar>();
         StoryNotlari ana_storyNotu = new StoryNotlari();
 
-
-
-        //NotStartedNotlari ana_notStartednotu = new NotStartedNotlari();
-        //InProgressNotlari ana_inProgressnotu = new InProgressNotlari();
-        //DoneNotlari ana_doneNotu = new DoneNotlari();
-
         OleDbConnection veriBaglantisi = new OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\Users\\MustafaCevik\\source\\repos\\_VeriTabanlari\\Veriler.mdb");
-        OleDbCommand ana_veriKomutu = new OleDbCommand();
+        OleDbCommand ana_veriKomutu = new OleDbCommand(); // veritabanı ilişkilendirmeleri
 
         int storySirasi;
         private void Veriden_UygunListelereEkleme()
         {
             veriBaglantisi.Open();
-            OleDbCommand veriKomutu = new OleDbCommand();
-            veriKomutu.Connection = veriBaglantisi;
-            veriKomutu.CommandText = ("Select * from Veriler");
-            OleDbDataReader veriOku = veriKomutu.ExecuteReader();
-            while (veriOku.Read()) // veritabanından veri okuma işlemi
+            OleDbCommand veriKomutu_Sto = new OleDbCommand();
+            veriKomutu_Sto.Connection = veriBaglantisi;
+            veriKomutu_Sto.CommandText = ("Select * from Veriler");
+            OleDbDataReader veriOku_Sto = veriKomutu_Sto.ExecuteReader();
+            while (veriOku_Sto.Read()) // veritabanından veri okuma işlemi
             {
-                if (veriOku["hangiPanelde"].ToString() == "Stories") // story taskı ise
+                if (veriOku_Sto["hangiPanelde"].ToString() == "Stories") // story taskı ise
                 {
-                    string[] okunanVeriler = new string[8];
-                    okunanVeriler[0] = veriOku["sira"].ToString();
-                    okunanVeriler[1] = veriOku["hangiPanelde"].ToString();
-                    okunanVeriler[2] = veriOku["tamAdi"].ToString();
-                    okunanVeriler[3] = veriOku["baslik"].ToString();
-                    okunanVeriler[4] = veriOku["aciklama"].ToString();
-                    okunanVeriler[5] = veriOku["renk"].ToString();
-                    okunanVeriler[6] = veriOku["kisi"].ToString();
-                    okunanVeriler[7] = veriOku["tarih"].ToString();
+                    string[] okunanVeriler_Sto = new string[8];
+                    okunanVeriler_Sto[0] = veriOku_Sto["sira"].ToString();
+                    okunanVeriler_Sto[1] = veriOku_Sto["hangiPanelde"].ToString();
+                    okunanVeriler_Sto[2] = veriOku_Sto["tamAdi"].ToString();
+                    okunanVeriler_Sto[3] = veriOku_Sto["baslik"].ToString();
+                    okunanVeriler_Sto[4] = veriOku_Sto["aciklama"].ToString();
+                    okunanVeriler_Sto[5] = veriOku_Sto["renk"].ToString();
+                    okunanVeriler_Sto[6] = veriOku_Sto["kisi"].ToString();
+                    okunanVeriler_Sto[7] = veriOku_Sto["tarih"].ToString();
 
-                    StoryNotlari snot = Veriden_StoryNotuListeyeEkleme(okunanVeriler); // veritabanındaki storyyi listeye ekleme
+                    StoryNotlari snot = Veriden_StoryNotuListeyeEkleme(okunanVeriler_Sto); // veritabanındaki storyyi listeye ekleme
 
 
-                    OleDbCommand veriKomutu2 = new OleDbCommand();
-                    veriKomutu2.Connection = veriBaglantisi;
-                    veriKomutu2.CommandText = ("Select * from Veriler");
-                    OleDbDataReader veriOku2 = veriKomutu2.ExecuteReader();
+                    OleDbCommand veriKomutu_NS = new OleDbCommand();
+                    veriKomutu_NS.Connection = veriBaglantisi;
+                    veriKomutu_NS.CommandText = ("Select * from Veriler");
+                    OleDbDataReader veriOku_NS = veriKomutu_NS.ExecuteReader();
 
-                    while (veriOku2.Read())
+                    while (veriOku_NS.Read())
                     {
-                        if (veriOku2["hangiPanelde"].ToString() == "Not Started" && veriOku2["sira"].ToString() == snot.sira.ToString()) // o storynin -> not started taskı ise
+                        if (veriOku_NS["hangiPanelde"].ToString() == "Not Started" && veriOku_NS["sira"].ToString() == snot.sira.ToString()) // o storynin -> not started taskı ise
                         {
                             string[] okunanVeriler_NS = new string[8];
-                            okunanVeriler_NS[0] = veriOku2["sira"].ToString();
-                            okunanVeriler_NS[1] = veriOku2["hangiPanelde"].ToString();
-                            okunanVeriler_NS[2] = veriOku2["tamAdi"].ToString();
-                            okunanVeriler_NS[3] = veriOku2["baslik"].ToString();
-                            okunanVeriler_NS[4] = veriOku2["aciklama"].ToString();
-                            okunanVeriler_NS[5] = veriOku2["renk"].ToString();
-                            okunanVeriler_NS[6] = veriOku2["kisi"].ToString();
-                            okunanVeriler_NS[7] = veriOku2["tarih"].ToString();
+                            okunanVeriler_NS[0] = veriOku_NS["sira"].ToString();
+                            okunanVeriler_NS[1] = veriOku_NS["hangiPanelde"].ToString();
+                            okunanVeriler_NS[2] = veriOku_NS["tamAdi"].ToString();
+                            okunanVeriler_NS[3] = veriOku_NS["baslik"].ToString();
+                            okunanVeriler_NS[4] = veriOku_NS["aciklama"].ToString();
+                            okunanVeriler_NS[5] = veriOku_NS["renk"].ToString();
+                            okunanVeriler_NS[6] = veriOku_NS["kisi"].ToString();
+                            okunanVeriler_NS[7] = veriOku_NS["tarih"].ToString();
 
                             Veriden_NotStartedNotuListeyeEkleme(okunanVeriler_NS, snot);
                         }
                     }
 
-                    OleDbCommand veriKomutu3 = new OleDbCommand();
-                    veriKomutu3.Connection = veriBaglantisi;
-                    veriKomutu3.CommandText = ("Select * from Veriler");
-                    OleDbDataReader veriOku3 = veriKomutu3.ExecuteReader();
+                    OleDbCommand veriKomutu_IP = new OleDbCommand();
+                    veriKomutu_IP.Connection = veriBaglantisi;
+                    veriKomutu_IP.CommandText = ("Select * from Veriler");
+                    OleDbDataReader veriOku_IP = veriKomutu_IP.ExecuteReader();
 
-                    while (veriOku3.Read())
+                    while (veriOku_IP.Read())
                     {
-                        if (veriOku3["hangiPanelde"].ToString() == "In Progress" && veriOku3["sira"].ToString() == snot.sira.ToString()) // o storynin -> in progress taskı ise
+                        if (veriOku_IP["hangiPanelde"].ToString() == "In Progress" && veriOku_IP["sira"].ToString() == snot.sira.ToString()) // o storynin -> in progress taskı ise
                         {
                             string[] okunanVeriler_IP = new string[8];
-                            okunanVeriler_IP[0] = veriOku3["sira"].ToString();
-                            okunanVeriler_IP[1] = veriOku3["hangiPanelde"].ToString();
-                            okunanVeriler_IP[2] = veriOku3["tamAdi"].ToString();
-                            okunanVeriler_IP[3] = veriOku3["baslik"].ToString();
-                            okunanVeriler_IP[4] = veriOku3["aciklama"].ToString();
-                            okunanVeriler_IP[5] = veriOku3["renk"].ToString();
-                            okunanVeriler_IP[6] = veriOku3["kisi"].ToString();
-                            okunanVeriler_IP[7] = veriOku3["tarih"].ToString();
+                            okunanVeriler_IP[0] = veriOku_IP["sira"].ToString();
+                            okunanVeriler_IP[1] = veriOku_IP["hangiPanelde"].ToString();
+                            okunanVeriler_IP[2] = veriOku_IP["tamAdi"].ToString();
+                            okunanVeriler_IP[3] = veriOku_IP["baslik"].ToString();
+                            okunanVeriler_IP[4] = veriOku_IP["aciklama"].ToString();
+                            okunanVeriler_IP[5] = veriOku_IP["renk"].ToString();
+                            okunanVeriler_IP[6] = veriOku_IP["kisi"].ToString();
+                            okunanVeriler_IP[7] = veriOku_IP["tarih"].ToString();
 
                             Veriden_InProgressNotuListeyeEkleme(okunanVeriler_IP, snot);
                         }
                     }
 
-                    OleDbCommand veriKomutu4 = new OleDbCommand();
-                    veriKomutu4.Connection = veriBaglantisi;
-                    veriKomutu4.CommandText = ("Select * from Veriler");
-                    OleDbDataReader veriOku4 = veriKomutu4.ExecuteReader();
+                    OleDbCommand veriKomutu_Dne = new OleDbCommand();
+                    veriKomutu_Dne.Connection = veriBaglantisi;
+                    veriKomutu_Dne.CommandText = ("Select * from Veriler");
+                    OleDbDataReader veriOku_Dne = veriKomutu_Dne.ExecuteReader();
 
 
-                    while (veriOku4.Read())
+                    while (veriOku_Dne.Read())
                     {
-                        if (veriOku4["hangiPanelde"].ToString() == "Done" && veriOku4["sira"].ToString() == snot.sira.ToString()) // o storynin -> done taskı ise
+                        if (veriOku_Dne["hangiPanelde"].ToString() == "Done" && veriOku_Dne["sira"].ToString() == snot.sira.ToString()) // o storynin -> done taskı ise
                         {
                             string[] okunanVeriler_Dne = new string[8];
-                            okunanVeriler_Dne[0] = veriOku4["sira"].ToString();
-                            okunanVeriler_Dne[1] = veriOku4["hangiPanelde"].ToString();
-                            okunanVeriler_Dne[2] = veriOku4["tamAdi"].ToString();
-                            okunanVeriler_Dne[3] = veriOku4["baslik"].ToString();
-                            okunanVeriler_Dne[4] = veriOku4["aciklama"].ToString();
-                            okunanVeriler_Dne[5] = veriOku4["renk"].ToString();
-                            okunanVeriler_Dne[6] = veriOku4["kisi"].ToString();
-                            okunanVeriler_Dne[7] = veriOku4["tarih"].ToString();
+                            okunanVeriler_Dne[0] = veriOku_Dne["sira"].ToString();
+                            okunanVeriler_Dne[1] = veriOku_Dne["hangiPanelde"].ToString();
+                            okunanVeriler_Dne[2] = veriOku_Dne["tamAdi"].ToString();
+                            okunanVeriler_Dne[3] = veriOku_Dne["baslik"].ToString();
+                            okunanVeriler_Dne[4] = veriOku_Dne["aciklama"].ToString();
+                            okunanVeriler_Dne[5] = veriOku_Dne["renk"].ToString();
+                            okunanVeriler_Dne[6] = veriOku_Dne["kisi"].ToString();
+                            okunanVeriler_Dne[7] = veriOku_Dne["tarih"].ToString();
 
                             Veriden_DoneNotuListeyeEkleme(okunanVeriler_Dne, snot);
                         }
@@ -130,7 +125,7 @@ namespace ScrumTable
                 storySirasi++;
             }
             veriBaglantisi.Close();
-        }
+        } // veritabanındaki verileri ilgili listeye ekleme
 
         private void VeriGuncelle(frm_EklemeGoruntuleme aktifForm, string guncellenecekVeri)
         {
@@ -141,10 +136,6 @@ namespace ScrumTable
             veriBaglantisi.Close();
 
             SiralamaIcinGerekliIslemler();
-            ana_notListesi = new List<Notlar>();
-            Veriden_UygunListelereEkleme();
-            ListedekiNotlariPaneleAktarma();
-
         }
 
         private string[] VeriBul(string aranacakVeri)
@@ -184,7 +175,19 @@ namespace ScrumTable
             veriBaglantisi.Close();
         }
 
+        private void VeriSil(string silinecekVeri)
+        {
+            veriBaglantisi.Open();
+            ana_veriKomutu.Connection = veriBaglantisi;
+            ana_veriKomutu.CommandText = "delete from Veriler where tamAdi= '" + silinecekVeri + "'";
+            ana_veriKomutu.ExecuteNonQuery();
+            veriBaglantisi.Close();
 
+            SiralamaIcinGerekliIslemler();
+            ana_notListesi = new List<Notlar>();
+            Veriden_UygunListelereEkleme();
+            ListedekiNotlariPaneleAktarma();
+        }
 
         private void ListedekiNotlariPaneleAktarma()
         {
@@ -208,7 +211,6 @@ namespace ScrumTable
             }
         }
 
-       // ********************
         private void Listeden_PaneleStoryEkleme(Notlar not)
         {
             Label storyLabeli = new Label();
@@ -224,12 +226,13 @@ namespace ScrumTable
 
             LabelRenginiBelirleme(storyLabeli, not.renk);
 
-           //storyLabeli.MouseClick += StoryLabelineTiklama;
+            storyLabeli.MouseClick += StoryyeTiklama;
 
             Label addTaskLabeli = LabeleAddTaskLabeliEkleme(storyLabeli);
 
             addTaskLabeli.MouseClick += AddTaskLabelineTiklama;
         }
+
         private void Listeden_PaneleTaskEkleme(Notlar not, Panel nereyeEklenecek)
         {
             Label eklenecekTask = new Label();
@@ -259,11 +262,10 @@ namespace ScrumTable
 
             nereyeEklenecek.Controls.Add(eklenecekTask);
 
-            eklenecekTask.MouseClick += LabeleTiklama;
+            eklenecekTask.MouseClick += TaskeTiklama;
         }
 
-
-        private void LabeleTiklama(object sender, MouseEventArgs e)
+        private void StoryyeTiklama(object sender, MouseEventArgs e)
         {
             Label tiklananLabel = (Label)sender;
             string labelTamadi = tiklananLabel.BackColor.Name + tiklananLabel.Text;
@@ -271,13 +273,34 @@ namespace ScrumTable
             string[] okunanVeriler = VeriBul(labelTamadi);
 
             frm_EklemeGoruntuleme goruntuleme = new frm_EklemeGoruntuleme();
-            goruntuleme.FormGoruntuleme(okunanVeriler[3], okunanVeriler[4], okunanVeriler[6], okunanVeriler[7], okunanVeriler[1]);
+            goruntuleme.cmb_Konumlandir.Hide();
+            goruntuleme.StoryGoruntuleme("story", okunanVeriler[3], okunanVeriler[4], okunanVeriler[6], okunanVeriler[7], okunanVeriler[1]);
 
-            if (goruntuleme.butonaTiklandimi)
+            if (goruntuleme.eklensinMi)
+            {
+                VeriGuncelle(goruntuleme, labelTamadi);
+            }
+        }
+
+        private void TaskeTiklama(object sender, MouseEventArgs e)
+        {
+            Label tiklananLabel = (Label)sender;
+            string labelTamadi = tiklananLabel.BackColor.Name + tiklananLabel.Text;
+
+            string[] okunanVeriler = VeriBul(labelTamadi);
+
+            frm_EklemeGoruntuleme goruntuleme = new frm_EklemeGoruntuleme();
+            goruntuleme.TaskGoruntuleme(okunanVeriler[3], okunanVeriler[4], okunanVeriler[6], okunanVeriler[7], okunanVeriler[1]);
+
+            if (goruntuleme.eklensinMi)
             {
                 VeriGuncelle(goruntuleme, labelTamadi);
             }
 
+            else if (goruntuleme.silinsinMi)
+            {
+                VeriSil(labelTamadi);
+            }
 
         }
 
@@ -287,7 +310,7 @@ namespace ScrumTable
             storyEklemeformu.cmb_Konumlandir.Hide();
             storyEklemeformu.ShowDialog();
 
-            if (storyEklemeformu.butonaTiklandimi)
+            if (storyEklemeformu.eklensinMi)
             {
                 Klavyeden_StoryNotuListeyeEkleme(storyEklemeformu);
 
@@ -308,7 +331,7 @@ namespace ScrumTable
             taskEklemeformu.cmb_Konumlandir.Hide();
             taskEklemeformu.ShowDialog();
 
-            if (taskEklemeformu.butonaTiklandimi)
+            if (taskEklemeformu.eklensinMi)
             {
                 Klavyeden_NotStartedNotuListeyeEkleme(taskEklemeformu, ana_storyNotu);
 
@@ -582,6 +605,9 @@ namespace ScrumTable
                 eklenenTaskSayaciInP[i] = 0;
                 eklenenTaskSayaciDne[i] = 0;
             }
+            ana_notListesi = new List<Notlar>();
+            Veriden_UygunListelereEkleme();
+            ListedekiNotlariPaneleAktarma();
         }
 
         private StoryNotlari HangiStoryninNotu(Label tiklananLabel)
