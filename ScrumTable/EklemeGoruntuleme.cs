@@ -37,14 +37,14 @@ namespace ScrumTable
             hangiPanele = cmb_Konumlandir.Text;
             eklensinMi = true;
             Close();
-        }
+        } // ekle(veya kaydet) butonuna tıklanıldığında gerçekleşecek işlemler 
 
         public bool silinsinMi;
         private void SilButonunaTiklama(object sender, EventArgs e)
         {
             silinsinMi = true;
             Close();
-        }
+        } // sil butuna tıklanıldığında gerçekleşecek işlemler 
 
         public void StoryGoruntuleme(string story, string baslik, string aciklama, string kisi, string tarih, string konum)
         {
@@ -58,7 +58,7 @@ namespace ScrumTable
             cmb_KimTarafindan.Text = kisi;
             cmb_Konumlandir.Text = konum;
             ShowDialog();
-        }
+        }  // story görüntüleme formu
 
         public void TaskGoruntuleme(string baslik, string aciklama, string kisi, string tarih, string konum)
         {
@@ -74,10 +74,11 @@ namespace ScrumTable
             cmb_KimTarafindan.Text = kisi;
             cmb_Konumlandir.Text = konum;
             ShowDialog();
-        }
-        private string RenkAtamasi(string etiketTexti)
+        }  // task görüntüleme formu
+
+        private string RenkAtamasi(string secilenEtiketrengi)
         {
-            switch (etiketTexti)
+            switch (secilenEtiketrengi)
             {
                 case "Sarı":
                     return "Yellow";
@@ -106,7 +107,6 @@ namespace ScrumTable
                 default:
                     return "";
             }
-        }
-
+        }  // seçilen etiket rengine göre ilgili rengin belirlenmesi
     }
 }
