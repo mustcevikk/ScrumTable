@@ -16,10 +16,12 @@ namespace ScrumTable
         public frm_ScrumTable()
         {
             InitializeComponent();
+            Veriden_UygunListelereEkleme();
+            ListedekiNotlariPaneleAktarma();
         }
 
         List<Notlar> ana_notListesi = new List<Notlar>();
-        StoryNotlari bu_storyNotu = new StoryNotlari();
+        StoryNotlari ana_storyNotu = new StoryNotlari();
 
 
 
@@ -28,6 +30,7 @@ namespace ScrumTable
         //DoneNotlari ana_doneNotu = new DoneNotlari();
 
         OleDbConnection veriBaglantisi = new OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\Users\\MustafaCevik\\source\\repos\\_VeriTabanlari\\Veriler.mdb");
+        OleDbCommand ana_veriKomutu = new OleDbCommand();
 
         int storySirasi;
         private void Veriden_UygunListelereEkleme()
@@ -39,7 +42,7 @@ namespace ScrumTable
             OleDbDataReader veriOku = veriKomutu.ExecuteReader();
             while (veriOku.Read()) // veritabanından veri okuma işlemi
             {
-                if (veriOku["hangiPanelde"].ToString() == "pnl_Stories") // story taskı ise
+                if (veriOku["hangiPanelde"].ToString() == "Stories") // story taskı ise
                 {
                     string[] okunanVeriler = new string[8];
                     okunanVeriler[0] = veriOku["sira"].ToString();
@@ -61,7 +64,7 @@ namespace ScrumTable
 
                     while (veriOku2.Read())
                     {
-                        if (veriOku2["hangiPanelde"].ToString() == "pnl_NotStarted" && veriOku2["sira"].ToString() == snot.sira.ToString()) // o storynin -> not started taskı ise
+                        if (veriOku2["hangiPanelde"].ToString() == "Not Started" && veriOku2["sira"].ToString() == snot.sira.ToString()) // o storynin -> not started taskı ise
                         {
                             string[] okunanVeriler_NS = new string[8];
                             okunanVeriler_NS[0] = veriOku2["sira"].ToString();
@@ -84,7 +87,7 @@ namespace ScrumTable
 
                     while (veriOku3.Read())
                     {
-                        if (veriOku3["hangiPanelde"].ToString() == "pnl_InProgress" && veriOku3["sira"].ToString() == snot.sira.ToString()) // o storynin -> in progress taskı ise
+                        if (veriOku3["hangiPanelde"].ToString() == "In Progress" && veriOku3["sira"].ToString() == snot.sira.ToString()) // o storynin -> in progress taskı ise
                         {
                             string[] okunanVeriler_IP = new string[8];
                             okunanVeriler_IP[0] = veriOku3["sira"].ToString();
@@ -108,7 +111,7 @@ namespace ScrumTable
 
                     while (veriOku4.Read())
                     {
-                        if (veriOku4["hangiPanelde"].ToString() == "pnl_Done" && veriOku4["sira"].ToString() == snot.sira.ToString()) // o storynin -> done taskı ise
+                        if (veriOku4["hangiPanelde"].ToString() == "Done" && veriOku4["sira"].ToString() == snot.sira.ToString()) // o storynin -> done taskı ise
                         {
                             string[] okunanVeriler_Dne = new string[8];
                             okunanVeriler_Dne[0] = veriOku4["sira"].ToString();
@@ -128,6 +131,60 @@ namespace ScrumTable
             }
             veriBaglantisi.Close();
         }
+
+        private void VeriGuncelle(frm_EklemeGoruntuleme aktifForm, string guncellenecekVeri)
+        {
+            veriBaglantisi.Open();
+            ana_veriKomutu.Connection = veriBaglantisi;
+            ana_veriKomutu.CommandText = "update Veriler set hangiPanelde='" + aktifForm.hangiPanele + "', aciklama='" + aktifForm.aciklama + "', kisi='" + aktifForm.kimTarafindan + "', tarih='" + aktifForm.tarih.ToShortDateString() + "'where tamAdi = '" + guncellenecekVeri + "'";
+            ana_veriKomutu.ExecuteNonQuery();
+            veriBaglantisi.Close();
+
+            SiralamaIcinGerekliIslemler();
+            ana_notListesi = new List<Notlar>();
+            Veriden_UygunListelereEkleme();
+            ListedekiNotlariPaneleAktarma();
+
+        }
+
+        private string[] VeriBul(string aranacakVeri)
+        {
+            veriBaglantisi.Open();
+            OleDbCommand veriKomutu = new OleDbCommand();
+            veriKomutu.Connection = veriBaglantisi;
+            veriKomutu.CommandText = ("Select * from Veriler");
+            OleDbDataReader veriOku = veriKomutu.ExecuteReader();
+
+            string[] okunanVeri = new string[8];
+
+            while (veriOku.Read())
+            {
+                if (veriOku["tamAdi"].ToString() == aranacakVeri)
+                {
+                    okunanVeri[0] = veriOku["sira"].ToString();
+                    okunanVeri[1] = veriOku["hangiPanelde"].ToString();
+                    okunanVeri[2] = veriOku["tamAdi"].ToString();
+                    okunanVeri[3] = veriOku["baslik"].ToString();
+                    okunanVeri[4] = veriOku["aciklama"].ToString();
+                    okunanVeri[5] = veriOku["renk"].ToString();
+                    okunanVeri[6] = veriOku["kisi"].ToString();
+                    okunanVeri[7] = veriOku["tarih"].ToString();
+                }
+            }
+            veriBaglantisi.Close();
+
+            return okunanVeri;
+        }
+
+        private void VeriEkle(Notlar aktifNot)
+        {
+            veriBaglantisi.Open();
+            OleDbCommand veriKomutu = new OleDbCommand("insert into Veriler (sira,hangiPanelde,tamAdi,baslik,aciklama,renk,kisi,tarih) values ('" + aktifNot.sira + "','" + aktifNot.hangiPanelde + "','" + aktifNot.tamAdi + "','" + aktifNot.baslik + "','" + aktifNot.aciklama + "','" + aktifNot.renk + "' , '" + aktifNot.kisi + "' , '" + aktifNot.tarih.ToShortDateString() + "')", veriBaglantisi);
+            veriKomutu.ExecuteNonQuery();
+            veriBaglantisi.Close();
+        }
+
+
 
         private void ListedekiNotlariPaneleAktarma()
         {
@@ -151,6 +208,28 @@ namespace ScrumTable
             }
         }
 
+       // ********************
+        private void Listeden_PaneleStoryEkleme(Notlar not)
+        {
+            Label storyLabeli = new Label();
+
+            storyLabeli.Location = new Point(0, (eklenenTaskSayaciSto * 205));
+            eklenenTaskSayaciSto++;
+
+            storyLabeli.Size = new Size(180, 180);
+            storyLabeli.FlatStyle = FlatStyle.Flat;
+            storyLabeli.TextAlign = ContentAlignment.MiddleCenter;
+            storyLabeli.Text = not.baslik;
+            pnl_Stories.Controls.Add(storyLabeli);
+
+            LabelRenginiBelirleme(storyLabeli, not.renk);
+
+           //storyLabeli.MouseClick += StoryLabelineTiklama;
+
+            Label addTaskLabeli = LabeleAddTaskLabeliEkleme(storyLabeli);
+
+            addTaskLabeli.MouseClick += AddTaskLabelineTiklama;
+        }
         private void Listeden_PaneleTaskEkleme(Notlar not, Panel nereyeEklenecek)
         {
             Label eklenecekTask = new Label();
@@ -182,31 +261,24 @@ namespace ScrumTable
 
             eklenecekTask.MouseClick += LabeleTiklama;
         }
-        private void Listeden_PaneleStoryEkleme(Notlar not)
-        {
-            Label storyLabeli = new Label();
 
-            storyLabeli.Location = new Point(0, (eklenenTaskSayaciSto * 205));
-            eklenenTaskSayaciSto++;
-
-            storyLabeli.Size = new Size(180, 180);
-            storyLabeli.FlatStyle = FlatStyle.Flat;
-            storyLabeli.TextAlign = ContentAlignment.MiddleCenter;
-            storyLabeli.Text = not.baslik;
-            pnl_Stories.Controls.Add(storyLabeli);
-
-            LabelRenginiBelirleme(storyLabeli, not.renk);
-
-            storyLabeli.MouseClick += LabeleTiklama;
-
-            Label addTaskLabeli = LabeleAddTaskLabeliEkleme(storyLabeli);
-
-            addTaskLabeli.MouseClick += AddTaskLabelineTiklama;
-        }
 
         private void LabeleTiklama(object sender, MouseEventArgs e)
         {
-            MessageBox.Show("st");
+            Label tiklananLabel = (Label)sender;
+            string labelTamadi = tiklananLabel.BackColor.Name + tiklananLabel.Text;
+
+            string[] okunanVeriler = VeriBul(labelTamadi);
+
+            frm_EklemeGoruntuleme goruntuleme = new frm_EklemeGoruntuleme();
+            goruntuleme.FormGoruntuleme(okunanVeriler[3], okunanVeriler[4], okunanVeriler[6], okunanVeriler[7], okunanVeriler[1]);
+
+            if (goruntuleme.butonaTiklandimi)
+            {
+                VeriGuncelle(goruntuleme, labelTamadi);
+            }
+
+
         }
 
         private void AddStoryLabelineTiklama(object sender, EventArgs e)
@@ -229,7 +301,7 @@ namespace ScrumTable
         {
             Label tiklananLabel = (Label)sender;
 
-            bu_storyNotu = HangiStoryninNotu(tiklananLabel);
+            ana_storyNotu = HangiStoryninNotu(tiklananLabel);
 
             frm_EklemeGoruntuleme taskEklemeformu = new frm_EklemeGoruntuleme();
             taskEklemeformu.cmb_Etiket.Enabled = false;
@@ -238,7 +310,7 @@ namespace ScrumTable
 
             if (taskEklemeformu.butonaTiklandimi)
             {
-                Klavyeden_NotStartedNotuListeyeEkleme(taskEklemeformu, bu_storyNotu);
+                Klavyeden_NotStartedNotuListeyeEkleme(taskEklemeformu, ana_storyNotu);
 
                 SiralamaIcinGerekliIslemler();
 
@@ -256,7 +328,7 @@ namespace ScrumTable
             StoryNotlari storyNotu = new StoryNotlari
             {
                 sira = kacinciSiraya + 1,
-                hangiPanelde = pnl_Stories.Name,
+                hangiPanelde = "Stories",
                 tamAdi = storyFormu.etiket + storyFormu.baslik,
                 baslik = storyFormu.baslik,
                 aciklama = storyFormu.aciklama,
@@ -266,6 +338,8 @@ namespace ScrumTable
             };
 
             ana_notListesi.Add(storyNotu);
+
+            VeriEkle(storyNotu);
         }
 
         private void Klavyeden_NotStartedNotuListeyeEkleme(frm_EklemeGoruntuleme taskFormu, StoryNotlari snot)
@@ -278,7 +352,7 @@ namespace ScrumTable
                     NotStartedNotlari notStartednotu = new NotStartedNotlari
                     {
                         sira = snot.sira,
-                        hangiPanelde = pnl_NotStarted.Name,
+                        hangiPanelde = "Not Started",
                         tamAdi = snot.renk + taskFormu.baslik,
                         baslik = taskFormu.baslik,
                         aciklama = taskFormu.aciklama,
@@ -289,10 +363,7 @@ namespace ScrumTable
 
                     snot.NotStTaskListesi.Add(notStartednotu);
 
-                    veriBaglantisi.Open();
-                    OleDbCommand veriKomutu = new OleDbCommand("insert into Veriler (sira,hangiPanelde,tamAdi,baslik,aciklama,renk,kisi,tarih) values ('" + notStartednotu.sira + "','" + notStartednotu.hangiPanelde + "','" + notStartednotu.tamAdi + "','" + notStartednotu.baslik + "','" + notStartednotu.aciklama + "','" + notStartednotu.renk + "' , '" + notStartednotu.kisi + "' , '" + notStartednotu.tarih.ToShortDateString() + "')", veriBaglantisi);
-                    veriKomutu.ExecuteNonQuery();
-                    veriBaglantisi.Close();
+                    VeriEkle(notStartednotu);
 
                     break;
                 }
@@ -520,11 +591,11 @@ namespace ScrumTable
             {
                 if (snot.renk == tiklananLabelrengi)
                 {
-                    bu_storyNotu = snot;
+                    ana_storyNotu = snot;
                 }
             }
 
-            return bu_storyNotu;
+            return ana_storyNotu;
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -71,8 +71,9 @@ namespace ScrumTable
             }
         }
 
-        public void FormGoruntuleme(string baslik, string aciklama, string tarih, string kisi, string konum)
+        public void FormGoruntuleme(string baslik, string aciklama, string kisi, string tarih, string konum)
         {
+            txt_Baslik.Enabled = false;
             btn_Ekle.Text = "Kaydet";
             txt_Baslik.Text = baslik;
             txt_Aciklama.Text = aciklama;
