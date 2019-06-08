@@ -8,6 +8,5 @@ namespace ScrumTable
 {
     public class NotStartedNotlari : Notlar
     {
-
     }
 }

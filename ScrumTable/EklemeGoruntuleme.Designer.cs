@@ -80,8 +80,7 @@
             this.cmb_KimTarafindan.FormattingEnabled = true;
             this.cmb_KimTarafindan.Items.AddRange(new object[] {
             "Emin BORANDAĞ",
-            "Mustafa ÇEVİK",
-            "Yalçın KABAR"});
+            "Mustafa ÇEVİK"});
             this.cmb_KimTarafindan.Location = new System.Drawing.Point(319, 77);
             this.cmb_KimTarafindan.Name = "cmb_KimTarafindan";
             this.cmb_KimTarafindan.Size = new System.Drawing.Size(200, 21);

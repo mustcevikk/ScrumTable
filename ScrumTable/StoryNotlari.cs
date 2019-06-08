@@ -16,13 +16,16 @@ namespace ScrumTable
         {
             NotStTaskListesi = new List<NotStartedNotlari>();
             InProTaskListesi = new List<InProgressNotlari>();
-            DoneTaskListesi = new List<DoneNotlari>(); // composition ilişkiler
+            DoneTaskListesi = new List<DoneNotlari>();
         }
 
+        /// <summary>
+        /// İlgili taskı kategorisine göre ekleme işlemleri
+        /// </summary>
         public void NotStTaskEkle(NotStartedNotlari task)
         {
             NotStTaskListesi.Add(task);
-        }  // ilgili taski kategorisine göre ekleme
+        }  
         public void InProTaskEkle(InProgressNotlari task)
         {
             InProTaskListesi.Add(task);

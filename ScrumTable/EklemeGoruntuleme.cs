@@ -37,15 +37,24 @@ namespace ScrumTable
             hangiPanele = cmb_Konumlandir.Text;
             eklensinMi = true;
             Close();
-        } // ekle(veya kaydet) butonuna tıklanıldığında gerçekleşecek işlemler 
+        } 
 
         public bool silinsinMi;
         private void SilButonunaTiklama(object sender, EventArgs e)
         {
             silinsinMi = true;
             Close();
-        } // sil butuna tıklanıldığında gerçekleşecek işlemler 
+        }
 
+        /// <summary>
+        /// Story görüntüleme formu
+        /// </summary>
+        /// <param name="story"></param>
+        /// <param name="baslik"></param>
+        /// <param name="aciklama"></param>
+        /// <param name="kisi"></param>
+        /// <param name="tarih"></param>
+        /// <param name="konum"></param>
         public void StoryGoruntuleme(string story, string baslik, string aciklama, string kisi, string tarih, string konum)
         {
             Text = "Story Görüntüleme Ekranı";
@@ -58,8 +67,16 @@ namespace ScrumTable
             cmb_KimTarafindan.Text = kisi;
             cmb_Konumlandir.Text = konum;
             ShowDialog();
-        }  // story görüntüleme formu
+        }
 
+        /// <summary>
+        /// Task görüntüleme formu
+        /// </summary>
+        /// <param name="baslik"></param>
+        /// <param name="aciklama"></param>
+        /// <param name="kisi"></param>
+        /// <param name="tarih"></param>
+        /// <param name="konum"></param>
         public void TaskGoruntuleme(string baslik, string aciklama, string kisi, string tarih, string konum)
         {
             Text = "Task Görüntüleme Ekranı";
@@ -74,8 +91,13 @@ namespace ScrumTable
             cmb_KimTarafindan.Text = kisi;
             cmb_Konumlandir.Text = konum;
             ShowDialog();
-        }  // task görüntüleme formu
+        }
 
+        /// <summary>
+        /// Seçilen etiket rengine göre ilgili ingilizce renk ataması yapma (sarı -> yellow)
+        /// </summary>
+        /// <param name="secilenEtiketrengi"></param>
+        /// <returns>Secilen etiket renginin ingilizce karşılığı</returns>
         private string RenkAtamasi(string secilenEtiketrengi)
         {
             switch (secilenEtiketrengi)
@@ -107,6 +129,6 @@ namespace ScrumTable
                 default:
                     return "";
             }
-        }  // seçilen etiket rengine göre ilgili rengin belirlenmesi
+        }  
     }
 }
