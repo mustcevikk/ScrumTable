@@ -17,7 +17,7 @@ namespace ScrumTable
         List<Notlar> ana_NotListesi;
         StoryNotlari ana_StoryNotu;
         OleDbConnection veriBaglantisi;
-        OleDbCommand ana_VeriKomutu; // ana liste ve veritabanı tanımlamaları
+        OleDbCommand ana_VeriKomutu; // Ana liste ve veritabanı tanımlamaları
 
         public frm_ScrumTable()
         {
